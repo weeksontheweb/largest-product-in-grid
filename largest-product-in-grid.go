@@ -9,7 +9,19 @@ import (
 	"strings"
 )
 
-var grid []int
+type gridElement struct {
+	value            int
+	northProduct     int
+	southProduct     int
+	eastProduct      int
+	westProduct      int
+	southEastProduct int
+	northEastProduct int
+	southWestProduct int
+	northWestProduct int
+}
+
+var grid = make(map[int]gridElement)
 
 func main() {
 
@@ -25,7 +37,9 @@ func main() {
 			if err == nil {
 				fmt.Printf("%d %d\n", x, y)
 
-				fmt.Println("Point element = ", grid[2], grid[6])
+				fmt.Println("Point element = ", grid[2].value, grid[6].value, grid[8].value)
+
+				workOutLargestProduct(itemsInProductNumber)
 			}
 
 		} else {
@@ -48,7 +62,6 @@ func loadGrid(gridFile string, countInProduct int) (int, int, error) {
 	var otherRowElements int
 	var firstRowCounted bool
 	var elementString string
-	//var elementNumber int
 	var rowCount int
 
 	file, err := os.Open(gridFile)
@@ -75,19 +88,18 @@ func loadGrid(gridFile string, countInProduct int) (int, int, error) {
 			//fmt.Println("First position = ", spacePosition)
 
 			elementString = lineInFile[0:spacePosition]
-			fmt.Println("element = ", elementString)
+			//fmt.Println("element = ", elementString)
 
 			if _, err := strconv.Atoi(elementString); err == nil {
 
 				elementNumber, _ := strconv.Atoi(elementString)
 
-				fmt.Println("elementNumber = ", elementNumber)
-				grid = append(grid, elementNumber)
+				//fmt.Println("elementNumber = ", elementNumber)
 
-				fmt.Println("Length = ", len(grid))
+				appendGridElementToGrid(elementNumber)
 
 				lineInFile = lineInFile[spacePosition+1:]
-				fmt.Println("New lineInFile =", lineInFile)
+				//fmt.Println("New lineInFile =", lineInFile)
 				spacePosition = strings.Index(lineInFile, " ")
 				//fmt.Println("Second position = ", spacePosition)
 
@@ -111,5 +123,17 @@ func loadGrid(gridFile string, countInProduct int) (int, int, error) {
 	}
 
 	return firstRowElements, rowCount, nil
+}
+
+func appendGridElementToGrid(elementValue int) {
+
+	var newGridElement gridElement
+
+	newGridElement.value = elementValue
+
+	grid[len(grid)+1] = newGridElement
+}
+
+func workOutLargestProduct(elementsInProduct int) {
 
 }
