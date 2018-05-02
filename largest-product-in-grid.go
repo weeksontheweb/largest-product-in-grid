@@ -41,17 +41,19 @@ func main() {
 			fmt.Println("Required argument is not numeric.")
 		}
 	} else {
-		//Check to see if the number is numeric.
-
 		fmt.Println("Please enter the number of product numbers.")
 	}
 }
 
+//Read the grid in the grid.txt file.
+//Check that the grid is well formed.
+//For a grid to be well formed, it must:
+//		1. Have the same number of columns in all rows.
+//		2. Be entirely composed of numbers.
+//		3. The grid rows and columns must be at least as big
+//		   as the number of elements making up the product.
 func loadGrid(gridFile string, countInProduct int) (int, int, error) {
 
-	//Return an error if the grid is not uniform.
-	//Could be 20 x 10, 15 x 4 etc.
-	//Error if
 	var spacePosition int
 	var firstRowElements int
 	var otherRowElements int
@@ -104,6 +106,7 @@ func loadGrid(gridFile string, countInProduct int) (int, int, error) {
 			elementNumber, _ := strconv.Atoi(lineInFile)
 			appendGridElementToGrid(elementNumber)
 
+			//Count the number of columns.
 			if !firstRowCounted {
 				firstRowElements++
 			} else {
