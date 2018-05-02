@@ -29,16 +29,11 @@ func main() {
 		itemsInProduct := os.Args[1]
 
 		if _, err := strconv.Atoi(itemsInProduct); err == nil {
-			fmt.Println("Argument = ", itemsInProduct)
 
 			itemsInProductNumber, _ := strconv.Atoi(itemsInProduct)
 			columns, rows, err := loadGrid("grid.txt", itemsInProductNumber)
 
 			if err == nil {
-				fmt.Printf("%d %d\n", columns, rows)
-
-				fmt.Println("Point element = ", grid[2].value, grid[6].value, grid[8].value)
-
 				workOutLargestProduct(itemsInProductNumber, columns, rows)
 			}
 
@@ -75,8 +70,6 @@ func loadGrid(gridFile string, countInProduct int) (int, int, error) {
 	scanner := bufio.NewScanner(file)
 
 	for scanner.Scan() {
-		fmt.Println(scanner.Text())
-
 		otherRowElements = 0
 		rowCount++
 
@@ -85,23 +78,17 @@ func loadGrid(gridFile string, countInProduct int) (int, int, error) {
 		spacePosition = strings.Index(lineInFile, " ")
 
 		for spacePosition >= 0 {
-			//fmt.Println("First position = ", spacePosition)
 
 			elementString = lineInFile[0:spacePosition]
-			//fmt.Println("element = ", elementString)
 
 			if _, err := strconv.Atoi(elementString); err == nil {
 
 				elementNumber, _ := strconv.Atoi(elementString)
 
-				//fmt.Println("elementNumber = ", elementNumber)
-
 				appendGridElementToGrid(elementNumber)
 
 				lineInFile = lineInFile[spacePosition+1:]
-				//fmt.Println("New lineInFile =", lineInFile)
 				spacePosition = strings.Index(lineInFile, " ")
-				//fmt.Println("Second position = ", spacePosition)
 
 				if !firstRowCounted {
 					firstRowElements++
@@ -113,7 +100,6 @@ func loadGrid(gridFile string, countInProduct int) (int, int, error) {
 			}
 		}
 
-		//fmt.Println("Last element = ", lineInFile)
 		if _, err := strconv.Atoi(lineInFile); err == nil {
 			elementNumber, _ := strconv.Atoi(lineInFile)
 			appendGridElementToGrid(elementNumber)
@@ -136,7 +122,6 @@ func loadGrid(gridFile string, countInProduct int) (int, int, error) {
 		}
 	}
 
-	fmt.Println("firstRowElements = ", firstRowElements)
 	return firstRowElements, rowCount, nil
 }
 
@@ -144,9 +129,7 @@ func appendGridElementToGrid(elementValue int) {
 
 	var newGridElement gridElement
 
-	//fmt.Println("1111")
 	newGridElement.value = elementValue
-	//fmt.Println("2222")
 
 	grid[len(grid)] = newGridElement
 }
@@ -165,75 +148,132 @@ func workOutLargestProduct(elementsInProduct int, columns int, rows int) {
 	var row int
 	var column int
 	var largestProduct int
-	var largestRow int
-	var largestColumn int
-	var largestDirection string
+	var largestProductRow int
+	var largestProductColumn int
+	var largestProductDirection string
 
+	//Calculate the product for each number in the grid.
+	//Save the number into the appropriate place in the map.
+	//Store the largest product details.
 	for i := 0; i < len(grid); i++ {
 
 		row, column = convertToRowColumns(i, columns)
 
 		if row >= elementsInProduct {
-			//Look north.
+			//Look North.
 			newgrid := grid[i]
 			newgrid.northProduct = calculateProduct(elementsInProduct, row, column, columns, "n")
 			grid[i] = newgrid
+
+			if newgrid.northProduct > largestProduct {
+				largestProduct = newgrid.northProduct
+				largestProductRow = row
+				largestProductColumn = column
+				largestProductDirection = "North"
+			}
 		}
 
 		if row <= rows-elementsInProduct {
-			//Look south.
+			//Look South.
 			newgrid := grid[i]
 			newgrid.southProduct = calculateProduct(elementsInProduct, row, column, columns, "s")
 			grid[i] = newgrid
+
+			if newgrid.southProduct > largestProduct {
+				largestProduct = newgrid.southProduct
+				largestProductRow = row
+				largestProductColumn = column
+				largestProductDirection = "South"
+			}
 		}
 
 		if column <= columns-elementsInProduct {
-			//Look east.
+			//Look East.
 			newgrid := grid[i]
 			newgrid.eastProduct = calculateProduct(elementsInProduct, row, column, columns, "e")
 			grid[i] = newgrid
+
+			if newgrid.eastProduct > largestProduct {
+				largestProduct = newgrid.eastProduct
+				largestProductRow = row
+				largestProductColumn = column
+				largestProductDirection = "East"
+			}
 		}
 
 		if column >= elementsInProduct {
-			//Look west.
+			//Look West.
 			newgrid := grid[i]
 			newgrid.westProduct = calculateProduct(elementsInProduct, row, column, columns, "w")
 			grid[i] = newgrid
+
+			if newgrid.westProduct > largestProduct {
+				largestProduct = newgrid.westProduct
+				largestProductRow = row
+				largestProductColumn = column
+				largestProductDirection = "West"
+			}
 		}
 
 		if row <= rows-elementsInProduct && column <= columns-elementsInProduct {
-			//Look south east.
+			//Look South East.
 			newgrid := grid[i]
 			newgrid.southEastProduct = calculateProduct(elementsInProduct, row, column, columns, "se")
 			grid[i] = newgrid
+
+			if newgrid.southEastProduct > largestProduct {
+				largestProduct = newgrid.southEastProduct
+				largestProductRow = row
+				largestProductColumn = column
+				largestProductDirection = "South East"
+			}
 		}
 
 		if row >= elementsInProduct && column <= columns-elementsInProduct {
-			//Look north east.
+			//Look North East.
 			newgrid := grid[i]
 			newgrid.northEastProduct = calculateProduct(elementsInProduct, row, column, columns, "ne")
 			grid[i] = newgrid
+
+			if newgrid.northEastProduct > largestProduct {
+				largestProduct = newgrid.northEastProduct
+				largestProductRow = row
+				largestProductColumn = column
+				largestProductDirection = "North East"
+			}
 		}
 
 		if row <= rows-elementsInProduct && column >= elementsInProduct {
-			//Look south west.
+			//Look South West.
 			newgrid := grid[i]
 			newgrid.southWestProduct = calculateProduct(elementsInProduct, row, column, columns, "sw")
 			grid[i] = newgrid
+
+			if newgrid.southWestProduct > largestProduct {
+				largestProduct = newgrid.southWestProduct
+				largestProductRow = row
+				largestProductColumn = column
+				largestProductDirection = "South West"
+			}
 		}
 
 		if row >= elementsInProduct && column >= elementsInProduct {
-			//Look north west.
+			//Look North West.
 			newgrid := grid[i]
 			newgrid.northWestProduct = calculateProduct(elementsInProduct, row, column, columns, "nw")
 			grid[i] = newgrid
+
+			if newgrid.northWestProduct > largestProduct {
+				largestProduct = newgrid.northWestProduct
+				largestProductRow = row
+				largestProductColumn = column
+				largestProductDirection = "North West"
+			}
 		}
 	}
 
-	for i := 0; i < len(grid); i++ {
-	}
-
-	fmt.Printf("Largest product = %d, row = %d, column = %d, direction = %s\n", largestProduct, largestRow, largestColumn, largestDirection)
+	//Output result.
+	fmt.Printf("Largest product = %d, row = %d, column = %d, direction = %s\n", largestProduct, largestProductRow, largestProductColumn, largestProductDirection)
 }
 
 func convertToRowColumns(index int, columns int) (int, int) {
@@ -241,11 +281,6 @@ func convertToRowColumns(index int, columns int) (int, int) {
 }
 
 func convertToIndex(row int, column int, columns int) int {
-
-	if row == 7 && column == 9 {
-		//fmt.Printf("Converting row %d, column %d, to index %d\n", row, column, ((row-1)*columns)+(column-1))
-		//fmt.Println("Value = ", grid[((row-1)*columns)+(column-1)].value)
-	}
 	return ((row - 1) * columns) + (column - 1)
 }
 
@@ -255,38 +290,33 @@ func calculateProduct(elementsInProduct int, row int, column int, columns int, d
 
 	product = 1
 
-	//fmt.Println("Going in - product = ", product)
 	for i := 0; i < elementsInProduct; i++ {
 		switch direction {
 		case "n":
-			//fmt.Println("Going north.")
+			//Going North.
 			product *= grid[convertToIndex(row-i, column, columns)].value
 		case "s":
-			//fmt.Println("Going south.")
+			//Going South.
 			product *= grid[convertToIndex(row+i, column, columns)].value
 		case "e":
-			//fmt.Println("Going east.")
+			//Going East.
 			product *= grid[convertToIndex(row, column+i, columns)].value
 		case "w":
-			//fmt.Println("Going west.")
+			//Going West.
 			product *= grid[convertToIndex(row, column-i, columns)].value
 		case "ne":
-			//fmt.Println("Going north east.")
+			//Going North East.
 			product *= grid[convertToIndex(row-i, column+i, columns)].value
 		case "se":
-			//fmt.Println("Going south east.")
+			//Going South East.
 			product *= grid[convertToIndex(row+i, column+i, columns)].value
 		case "nw":
-			//fmt.Println("Going north west.")
+			//Going North West.
 			product *= grid[convertToIndex(row-i, column-i, columns)].value
 		case "sw":
-			//fmt.Println("Going south west.")
+			//Going South West.
 			product *= grid[convertToIndex(row+i, column-i, columns)].value
 		}
-	}
-
-	if row == 7 && column == 9 {
-		//fmt.Println("Actual product = ", product)
 	}
 
 	return product
