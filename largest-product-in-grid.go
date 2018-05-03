@@ -34,7 +34,11 @@ func main() {
 			columns, rows, err := loadGrid("grid.txt", itemsInProductNumber)
 
 			if err == nil {
-				workOutLargestProduct(itemsInProductNumber, columns, rows)
+				if itemsInProductNumber > columns && itemsInProductNumber > rows {
+					fmt.Println("Elements to make up product is larger than rows or columns.")
+				} else {
+					workOutLargestProduct(itemsInProductNumber, columns, rows)
+				}
 			}
 
 		} else {
