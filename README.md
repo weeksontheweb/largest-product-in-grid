@@ -1,8 +1,10 @@
 # largest-product-in-grid
 
-go get github.com/weeksontheweb/largest-product-in-grid.git
+## Build
 
 go build largest-product-in-grid.go
+
+## Execution
 
 ./largest-product-in-grid 4
 
