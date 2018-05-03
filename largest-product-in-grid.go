@@ -139,14 +139,18 @@ func appendGridElementToGrid(elementValue int) {
 
 func workOutLargestProduct(elementsInProduct int, columns int, rows int) {
 
-	//Look north, if row >= elements in product.
-	//Look south, if row <= rows - elements in product.
-	//Look east, if column <= columns - elements in product.
-	//Look west, if column >= elements in product.
-	//Look south east,
-	//Look north east,
-	//Look south west,
-	//Look north west,
+	/*
+		Look:
+
+		North, if row >= elements in product.
+		South, if row <= rows - elements in product.
+		East, if column <= columns - elements in product.
+		West, if column >= elements in product.
+		South East, if row <= rows - elements in product and column <= columns - elements in product.
+		North East, if row >= elements in product and column <= columns - elements in product.
+		South West, if row <= rows - elements in product and column >= elements in product.
+		North West, if row >= elements in product and column >= elements in product.
+	*/
 
 	var row int
 	var column int
@@ -287,6 +291,7 @@ func convertToIndex(row int, column int, columns int) int {
 	return ((row - 1) * columns) + (column - 1)
 }
 
+//Scan the adjacent elements in the grid required to make up the product.
 func calculateProduct(elementsInProduct int, row int, column int, columns int, direction string) int {
 
 	var product int
